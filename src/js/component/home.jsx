@@ -1,24 +1,44 @@
-import React from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useState, useEffect } from "react";
+import TodoList from "./Todolist";
 
-//create your first component
-const Home = () => {
-	return (
+
+const Home = ( ) => {
+	const [ tasks, setTasks ]= useState ([])
+	
+	useEffect( ()=> { getTodolist()}, [] )
+    
+   
+	function getTodolist () { 
+    
+	fetch ( 'https://playground.4geeks.com/apis/fake/todos/user/cam')
+    .then(response => {
+	if (!response.ok) {
+	   throw Error(response.statusText);
+	}
+    // Read the response as json.
+	 return response.json();
+     })
+    .then(responseAsJson => {
+    // Do stuff with the JSONified response
+	 setTasks(responseAsJson);
+     })
+    .catch(error => {
+	    console.log('Looks like there was a problem: \n', error);
+    });
+
+	}
+
+	const listItems = tasks.map (task => <li> (task)</li>);
+	return( 
+	
 		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+			
+			<h1 className="text-center mt-5">Todolist</h1>
+			<TodoList>
+				<ul>{listItems}</ul> ;
+				</TodoList>
+			
 		</div>
 	);
 };
